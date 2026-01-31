@@ -31,11 +31,18 @@
               fetchSubmodules = true;
             };
 
-            # Nightly may have patches already applied - filter as needed
-            patches = builtins.filter (p:
-              let name = builtins.baseNameOf (toString p); in
-              (pkgs.lib.hasPrefix "0001-not-for-upstream" name)
-            ) (oldAttrs.patches or []);
+            # Keep upstream patches, replacing opencv patch with ours (adds imgcodecs)
+            patches = (builtins.filter (p:
+              !(pkgs.lib.hasInfix "opencv" (builtins.baseNameOf (toString p)))
+            ) (oldAttrs.patches or [])) ++ [
+              ./patches/opencv-nix.patch
+            ];
+
+            # Nightly's Findlibnoise.cmake expects different variable names
+            cmakeFlags = (oldAttrs.cmakeFlags or []) ++ [
+              "-DLIBNOISE_INCLUDE_DIR=${pkgs.libnoise}/include"
+              "-DLIBNOISE_LIBRARY_RELEASE=${pkgs.libnoise}/lib/libnoise-static.a"
+            ];
 
             meta = oldAttrs.meta // {
               description = "OrcaSlicer Nightly (${nightlyConfig.version})";

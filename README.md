@@ -18,6 +18,10 @@ This flake tracks the `nightly-builds` tag, giving you:
 
 ## Quick Start
 
+> **Note:** First build takes 30-60 minutes. OrcaSlicer is a large C++ project.
+> If you run into out-of-memory errors, try reducing parallelism:
+> `nix build -j 1 --cores 6` took 38 minutes on a Ryzen 7 3700X with 16GB RAM.
+
 ### Run without installing
 
 ```bash
@@ -27,7 +31,7 @@ nix run github:skwort/orca-slicer-nightly
 ### Install to your profile
 
 ```bash
-nix profile install github:skwort/orca-slicer-nightly
+nix profile add github:skwort/orca-slicer-nightly
 ```
 
 ## Standalone Installation (Without Home Manager)
@@ -35,7 +39,7 @@ nix profile install github:skwort/orca-slicer-nightly
 ### Install
 
 ```bash
-nix profile install github:skwort/orca-slicer-nightly
+nix profile add github:skwort/orca-slicer-nightly
 ```
 
 ### Verify Installation
